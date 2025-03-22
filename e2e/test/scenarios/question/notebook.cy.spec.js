@@ -363,7 +363,7 @@ describe("scenarios > question > notebook", { tags: "@slow" }, () => {
     cy.findByTestId("fields-picker").click();
 
     H.popover().within(() => {
-      cy.findByText("Select none").click();
+      cy.findByText("Select all").click();
       cy.findByLabelText("ID").should("be.disabled");
       cy.findByText("Tax").click();
       cy.findByLabelText("ID").should("be.enabled").click();
@@ -405,12 +405,12 @@ describe("scenarios > question > notebook", { tags: "@slow" }, () => {
     H.createQuestion(questionDetails, { visitQuestion: true });
 
     H.filter();
-    // eslint-disable-next-line no-unscoped-text-selectors -- deprecated usage
-    cy.findByText("Summaries").click();
-
-    H.filterField("Max of Name", {
-      operator: "Starts with",
+    H.popover().within(() => {
+      cy.findByText("Summaries").click();
+      cy.findByText("Max of Name").click();
     });
+    H.selectFilterOperator("Starts with");
+    H.popover().findByPlaceholderText("Enter some text").should("be.visible");
   });
 
   it("should treat max/min on a category as a string filter (metabase#22154)", () => {
@@ -427,11 +427,12 @@ describe("scenarios > question > notebook", { tags: "@slow" }, () => {
     H.createQuestion(questionDetails, { visitQuestion: true });
 
     H.filter();
-    // eslint-disable-next-line no-unscoped-text-selectors -- deprecated usage
-    cy.findByText("Summaries").click();
-    H.filterField("Min of Vendor", {
-      operator: "ends with",
+    H.popover().within(() => {
+      cy.findByText("Summaries").click();
+      cy.findByText("Min of Vendor").click();
     });
+    H.selectFilterOperator("Ends with");
+    H.popover().findByPlaceholderText("Enter some text").should("be.visible");
   });
 
   it("should prompt to join with a model if the question is based on a model", () => {
